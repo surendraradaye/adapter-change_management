@@ -65,7 +65,6 @@ function isHibernating(response) {
   && response.statusCode === 200;
 }
 
-
 /**
  * @function processRequestResults
  * @description Inspect ServiceNow API response for an error, bad response code, or
@@ -102,7 +101,59 @@ function processRequestResults(error, response, body, callback) {
       callbackError = 'Service Now instance is hibernating';
       console.error(callbackError);
     } else {
-    console.log(`\n processRequestResults::response: \n${JSON.stringify(response)}`)
+
+        /*
+        let ticket = {
+	        change_ticket_number: null,
+	        active: null,
+	        priority: null,
+	        description: null,
+	        work_start: null,
+	        work_end: null,
+	        change_ticket_key: null
+        };
+        */
+
+        let body = JSON.parse(JSON.stringify(response)).body;
+        let obj = JSON.parse(body);
+        let results = JSON.parse(JSON.stringify(obj)).result;
+        let [result] = JSON.parse(JSON.stringify(results));
+        let sysid = JSON.parse(JSON.stringify(result)).sys_id;
+        let number = JSON.parse(JSON.stringify(result)).number;
+        let active = JSON.parse(JSON.stringify(result)).active;
+        let description = JSON.parse(JSON.stringify(result)).description;
+        let priority = JSON.parse(JSON.stringify(result)).priority;
+        let work_start = JSON.parse(JSON.stringify(result)).work_start;
+        let work_end = JSON.parse(JSON.stringify(result)).work_end;
+
+        //let tickeElements = ['change_ticket_number', 'active', 'description', 'priority', 'work_start', 'work_end','change_ticket_key'];
+
+        let objRecord = [{ change_ticket_number: number, active: active, description: description, priority: priority, work_start: work_start, work_end:work_end,change_ticket_key:sysid }];
+
+        /*
+        let objRecord = [];
+        ticket.change_ticket_number = number;
+        ticket.active = active;
+        ticket.description = description;
+        ticket.priority = priority;
+        ticket.work_start = work_start;
+        ticket.work_end = work_end;
+        ticket.change_ticket_key = sysid;
+
+        objRecord.push({ticket});
+        */
+
+
+        //let result = JSON.parse(body)
+    //console.log(`\n processRequestResults::response: \n${JSON.stringify(response)}`)
+
+    //console.log(`\n processRequestResults::OBJ parse: \n${JSON.stringify(obj)}`)
+    //console.log(`\n processRequestResults::results parse: \n${JSON.stringify(results)}`)
+    //console.log(`\n processRequestResults::result parse: \n${JSON.stringify(result)}`)
+    console.log(`\n processRequestResults::result sysid: \n${JSON.stringify(sysid)}`)
+    console.log(`\n processRequestResults::result description: \n${JSON.stringify(description)}`)
+    console.log(`\n processRequestResults::result number: \n${JSON.stringify(number)}`)
+    console.log(`\n processRequestResults::result objRecord Array: \n${JSON.stringify(objRecord)}`)
       callbackData = response;
     }
     return callback(callbackData, callbackError);
@@ -211,12 +262,14 @@ function main() {
     }
     console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
   });
+  /*
   post({ serviceNowTable: 'change_request' }, (data, error) => {
     if (error) {
       console.error(`\nError returned from POST request:\n${JSON.stringify(error)}`);
     }
     console.log(`\nResponse returned from POST request:\n${JSON.stringify(data)}`)
   });
+  */
 }
 
 

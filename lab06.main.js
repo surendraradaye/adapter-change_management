@@ -176,34 +176,13 @@ healthcheck(callback) {
    *   handles the response.
    */
   getRecord(callback) {
+    /**
+     * Write the body for this function.
+     * The function is a wrapper for this.connector's get() method.
+     * Note how the object was instantiated in the constructor().
+     * get() takes a callback function.
+     */
      this.connector.get(callback);
-    log.debug(`\n processRequestResults::callback: \n${JSON.stringify(callback.results)}`);
-
-  let response = callback.results;
-  let errorMessage = callback.error;
-
-    if (callback.error) {
-        log.error("getRecord returned error: " + JSON.stringify(errorMessage) + "\n");
-    } else {
-        log.debug('Return data ${response}')
-        let body = JSON.parse(JSON.stringify(response)).body;
-        let obj = JSON.parse(body);
-        let results = JSON.parse(JSON.stringify(obj)).result;
-        let [result] = JSON.parse(JSON.stringify(results));
-        let sysid = JSON.parse(JSON.stringify(result)).sys_id;
-        let number = JSON.parse(JSON.stringify(result)).number;
-        let active = JSON.parse(JSON.stringify(result)).active;
-        let description = JSON.parse(JSON.stringify(result)).description;
-        let priority = JSON.parse(JSON.stringify(result)).priority;
-        let work_start = JSON.parse(JSON.stringify(result)).work_start;
-        let work_end = JSON.parse(JSON.stringify(result)).work_end;
-
-        let objRecord = [{ change_ticket_number: number, active: active, priority: priority, description: description, work_start: work_start, work_end:work_end,change_ticket_key:sysid }];
-        log.debug(`\n processRequestResults in GetRecord::result objRecord Array: \n${JSON.stringify(objRecord)}`)
-
-        return objRecord;
-  }
-
   }
 
   /**
@@ -223,34 +202,7 @@ healthcheck(callback) {
      * post() takes a callback function.
      */
      this.connector.post(callback);
-    log.debug(`\n processRequestResults::callback: \n${JSON.stringify(callback.results)}`);
-
-  let response = callback.results;
-  let errorMessage = callback.error;
-
-    if (callback.error) {
-        log.error("getRecord returned error: " + JSON.stringify(errorMessage) + "\n");
-    } else {
-        log.debug('Return data ${response}')
-        let body = JSON.parse(JSON.stringify(response)).body;
-        let obj = JSON.parse(body);
-        let results = JSON.parse(JSON.stringify(obj)).result;
-        let [result] = JSON.parse(JSON.stringify(results));
-        let sysid = JSON.parse(JSON.stringify(result)).sys_id;
-        let number = JSON.parse(JSON.stringify(result)).number;
-        let active = JSON.parse(JSON.stringify(result)).active;
-        let description = JSON.parse(JSON.stringify(result)).description;
-        let priority = JSON.parse(JSON.stringify(result)).priority;
-        let work_start = JSON.parse(JSON.stringify(result)).work_start;
-        let work_end = JSON.parse(JSON.stringify(result)).work_end;
-
-        let objRecord = { change_ticket_number: number, active: active, priority: priority, description: description, work_start: work_start, work_end:work_end,change_ticket_key:sysid };
-        log.debug(`\n processRequestResults in PostRecord::result objRecord: \n${JSON.stringify(objRecord)}`)
-
-        return objRecord;
   }
-}
-
 }
 
 module.exports = ServiceNowAdapter;
